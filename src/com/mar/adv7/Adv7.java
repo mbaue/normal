@@ -37,17 +37,32 @@ public class Adv7 {
             System.out.println("zaznamu "+itemCount+", barev " + colors.size());
             System.out.println(colors);
 
+            Set<String> bagColorsAllowed = new HashSet<String>();
+            Set<String> anotherBagColorsAllowed = new HashSet<String>();
             for (HashMap.Entry<String, List<String>> entry : colors.entrySet()) {
                 if (entry.getValue().contains("shiny gold")) {
                     System.out.println(entry.getKey() + "++++++++++++++");
+                    bagColorsAllowed.add(entry.getKey());
                 }
             }
+            System.out.println(bagColorsAllowed.size());
+            int prevSize = bagColorsAllowed.size();
+            for(String item : bagColorsAllowed) {
+                for (HashMap.Entry<String, List<String>> entry : colors.entrySet()) {
+                    if (entry.getValue().contains(item)) {
+                        System.out.println(entry.getKey() + "+++2nd level+++++++++++");
+                        anotherBagColorsAllowed.add(entry.getKey());
+                    }
+                }
+            }
+
+            System.out.println(anotherBagColorsAllowed.size());
 
             br.close();
 
 
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
 
 
@@ -55,9 +70,9 @@ public class Adv7 {
 
 
     private static String printarray(String[] str) {
-        StringBuffer retstr = new StringBuffer();
-        for (int i = 0; i < str.length; i++) {
-            retstr = retstr.append(str[i] + " + ");
+        StringBuilder retstr = new StringBuilder();
+        for (String s : str) {
+            retstr.append(s).append(" + ");
         }
         return retstr.toString();
     }
