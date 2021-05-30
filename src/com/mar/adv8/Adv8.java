@@ -42,20 +42,16 @@ public class Adv8 {
 
                     i = 1;
                     int accumulator = 0;
-                    while (instructions[i - 1][2] == "N") {
+                    while (instructions[i - 1][2].equals("N")) {
                         //printInstructions(i-1);
                         instructions[i - 1][2] = "Y";
                         switch (instructions[i - 1][0]) {
-                            case "acc":
+                            case "acc" -> {
                                 accumulator += Integer.parseInt(instructions[i - 1][1]);
                                 i++;
-                                break;
-                            case "jmp":
-                                i += Integer.parseInt(instructions[i - 1][1]);
-                                break;
-                            case "nop":
-                                i++;
-
+                            }
+                            case "jmp" -> i += Integer.parseInt(instructions[i - 1][1]);
+                            case "nop" -> i++;
                         }
 
 
@@ -80,8 +76,7 @@ public class Adv8 {
             System.out.println("jmpCount=" + jmpCount);
             System.out.println("nopCount=" + nopCount);
             br.close();
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             System.out.println(Arrays.toString(e.getStackTrace()));
             System.out.println(e.getMessage());
             System.out.println("error mar");

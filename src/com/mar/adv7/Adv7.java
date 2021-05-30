@@ -15,7 +15,7 @@ public class Adv7 {
 
             int itemCount = 0;
             HashMap<String, List<String>> colors = new HashMap<>();
-
+            // rozparsovani vstupu do hashmap
             while ((line = br.readLine()) != null) {
                 itemCount++;
                 //System.out.println("line " + itemCount + ": " + line);
@@ -34,35 +34,59 @@ public class Adv7 {
                 colors.put(outerBag.replace("bags", "").trim(), Arrays.stream(innerBags).toList());
                 //System.out.println();
             }
-            System.out.println("zaznamu "+itemCount+", barev " + colors.size());
+            System.out.println("zaznamu " + itemCount + ", barev " + colors.size());
             System.out.println(colors);
 
-            Set<String> bagColorsAllowed = new HashSet<String>();
-            Set<String> anotherBagColorsAllowed = new HashSet<String>();
-            for (HashMap.Entry<String, List<String>> entry : colors.entrySet()) {
-                if (entry.getValue().contains("shiny gold")) {
-                    System.out.println(entry.getKey() + "++++++++++++++");
-                    bagColorsAllowed.add(entry.getKey());
-                }
-            }
-            System.out.println(bagColorsAllowed.size());
-            int prevSize = bagColorsAllowed.size();
-            for(String item : bagColorsAllowed) {
-                for (HashMap.Entry<String, List<String>> entry : colors.entrySet()) {
-                    if (entry.getValue().contains(item)) {
-                        System.out.println(entry.getKey() + "+++2nd level+++++++++++");
-                        anotherBagColorsAllowed.add(entry.getKey());
+            Set<String> bagColorsAllowed = new HashSet<>();
+            Set<String> searchBags = new HashSet<>();
+            searchBags.add("shiny gold");
+            //Set<String> anotherBagColorsAllowed = new HashSet<>();
+
+//            for (HashMap.Entry<String, List<String>> entry : colors.entrySet()) {
+//                if (entry.getValue().contains("shiny gold")) {
+//                    System.out.println(entry.getKey() + "++++++++++++++");
+//                    bagColorsAllowed.add(entry.getKey());
+//                }
+//            }
+
+            //System.out.println(bagColorsAllowed.size());
+            //int prevSize = bagColorsAllowed.size();
+            int round = 0;
+            Set<String> bagsFromRound = new HashSet<>();
+            do {
+                round++;
+                System.out.println(round + ". kolo --------------------------------------------------------------------");
+                bagsFromRound.clear();
+                for (String item : searchBags) {
+                    System.out.println(item  + " searched-----------------------------------------");
+                    for (HashMap.Entry<String, List<String>> entry : colors.entrySet()) {
+                        if (entry.getValue().contains(item)) {
+                            System.out.println(entry.getKey());
+                            if (!bagColorsAllowed.contains(entry.getKey())) {
+                                bagsFromRound.add(entry.getKey());
+                            } else {
+                                System.out.println(item + " already there +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+                            }
+                        }
                     }
                 }
-            }
+                searchBags.clear();
+                searchBags.addAll(bagsFromRound);
+                bagColorsAllowed.addAll(bagsFromRound);
+                System.out.println("found from this round " + bagsFromRound.size());
+                System.out.println("total " + bagColorsAllowed.size());
+            } while (bagsFromRound.size() > 0
+                    //&& round <10
+             );
 
-            System.out.println(anotherBagColorsAllowed.size());
+            //System.out.println(anotherBagColorsAllowed.size());
 
             br.close();
 
 
         } catch (Exception e) {
-            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println(e.getMessage());
+            System.out.println("error mar");
         }
 
 
