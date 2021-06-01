@@ -108,6 +108,10 @@ The first half of this puzzle is complete! It provides one gold star: *
                 System.out.println("total " + bagColorsAllowed.size());
             } while (bagsFromRound.size() > 0);
 
+            System.out.println("-------------------SOLUTION-------------------------------------");
+            System.out.println("number of bags = " + bagColorsAllowed.size());
+            System.out.println("----------------------------------------------------------------");
+
             br.close();
 
         } catch (Exception e) {

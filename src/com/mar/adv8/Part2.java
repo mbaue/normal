@@ -1,8 +1,13 @@
 package com.mar.adv8;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.Arrays;
+
 public class Part2 {
     /*
-    --- Part Two ---
+--- Part Two ---
 After some careful analysis, you believe that exactly one instruction is corrupted.
 
 Somewhere in the program, either a jmp is supposed to be a nop, or a nop is supposed to be a jmp. (No acc instructions were harmed in the corruption of this boot code.)
@@ -36,9 +41,92 @@ acc +6  | 6
 After the last instruction (acc +6), the program terminates by attempting to run the instruction below the last instruction in the file. With this change, after the program terminates, the accumulator contains the value 8 (acc +1, acc +1, acc +6).
 
 Fix the program so that it terminates normally by changing exactly one jmp (to nop) or nop (to jmp). What is the value of the accumulator after the program terminates?
-     */
+
+Your puzzle answer was 733.
+    */
+
+    private static String[][] instructions = new String[650][3];
+    private static StringBuffer solution = new StringBuffer();
 
     public static void main(String[] args) {
 
+        try {
+            File f = new File("resources/input8.txt");
+            BufferedReader br = new BufferedReader(new FileReader(f));
+            String line;
+
+            int i = 0;
+            int jmpCount = 0;
+            int nopCount = 0;
+            while ((line = br.readLine()) != null) {
+                instructions[i][0] = line.split(" ")[0];
+                instructions[i][1] = line.split(" ")[1];
+                instructions[i][2] = "N";
+                if (instructions[i][0].equals("nop")) {
+                    nopCount++;
+                }
+                if (instructions[i][0].equals("jmp")) {
+                    jmpCount++;
+                }
+                i++;
+            }
+            System.out.println("nalezeno " + nopCount +" instrukci nop a "+ jmpCount + " instrukci jmp");
+
+            // postupne projit vsechny operace a vyzkouset cyklus pro nahrazeni - j index nahrazovani nop a jmp
+            for (int j = 0; j < 641; j++) {
+                if (!instructions[j][0].equals("acc")) {
+                    switchInstructions(j);
+
+                    i = 1;
+                    int accumulator = 0;
+                    // provadeni sekvence instrukci
+                    while (i <= 641 && instructions[i - 1][2].equals("N")) {
+                        instructions[i - 1][2] = "Y";
+                        switch (instructions[i - 1][0]) {
+                            case "acc" -> {
+                                accumulator += Integer.parseInt(instructions[i - 1][1]);
+                                i++;
+                            }
+                            case "jmp" -> i += Integer.parseInt(instructions[i - 1][1]);
+                            case "nop" -> i++;
+                        }
+                    }
+                    // program zakoncen posledni instrukci?
+                    if (i == 642) {
+                        solution.append("changed instr on line ")
+                                .append(j + 1)
+                                .append(" changed to ")
+                                .append(instructions[j][0])
+                                .append(" ")
+                                .append(instructions[j][1]);
+                        solution.append("\n      accumulator = " + accumulator);
+                        System.out.println("+++++++++++++++++++++++++++++++++++++accumulator=" + accumulator);
+                    }
+                    // vynulovat tag pouziti instrukce pro dalsi pokus
+                    for (int k = 0; k < 641; k++) {
+                        instructions[k][2] = "N";
+                    }
+                    switchInstructions(j);
+                }
+            }
+
+            System.out.println("----------------------------SOLUTION------------------------------");
+            System.out.println(solution);
+            System.out.println("------------------------------------------------------------------");
+            br.close();
+        } catch (Exception e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+            System.out.println(e.getMessage());
+            System.out.println("error mar");
+        }
     }
+
+    private static void switchInstructions(int j) {
+        if (instructions[j][0].equals("nop")) {
+            instructions[j][0] = "jmp";
+        } else {
+            instructions[j][0] = "nop";
+        }
+    }
+
 }
