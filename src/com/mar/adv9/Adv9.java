@@ -3,7 +3,8 @@ package com.mar.adv9;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.Arrays;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Adv9 {
 
@@ -17,8 +18,8 @@ through the clever use of several paperclips. Upon connection, the port outputs 
 The data appears to be encrypted with the eXchange-Masking Addition System (XMAS) which,
 conveniently for you, is an old cypher with an important weakness.
 
-XMAS starts by transmitting a preamble of 25 numbers. After that, each number you receive s
-hould be the sum of any two of the 25 immediately previous numbers. The two numbers
+XMAS starts by transmitting a preamble of 25 numbers. After that, each number you receive
+should be the sum of any two of the 25 immediately previous numbers. The two numbers
 will have different values, and there might be more than one such pair.
 
 For example, suppose your preamble consists of the numbers 1 through 25 in a random order.
@@ -64,9 +65,14 @@ sum of two of the previous 5 numbers; the only number that does not follow this 
 The first step of attacking the weakness in the XMAS data is to find the first
 number in the list (after the preamble) which is not the sum of two of the 25 numbers before it.
 What is the first number that does not have this property?
+
+Your puzzle answer was 57195069.
+
+The first half of this puzzle is complete! It provides one gold star: *
+
      */
 
-
+    public static final int PREAMBLE = 25;
     public static void main(String[] args) {
 
         try {
@@ -74,14 +80,29 @@ What is the first number that does not have this property?
             BufferedReader br = new BufferedReader(new FileReader(f));
             String line;
 
+            ArrayList<Long> numbers = new ArrayList<>(PREAMBLE+1);
+            int i = 0;
+            Set<Long> solution = new HashSet<>();
+
             while ((line = br.readLine()) != null) {
-                System.out.println(line);
+                if (i < PREAMBLE+1) {
+                    numbers.add(Long.decode(line));
+                } else {
+                    System.out.println(numbers.subList(0, 25));
+                    System.out.println(numbers.get(25));
+                    List<Long> frame = new ArrayList<>(numbers.subList(0, 25));
+                    if (!isSumOfPrevious(frame, numbers.get(25))) {
+                        solution.add(numbers.get(25));
+                    };
+                    numbers.remove(0);
+                    numbers.add(Long.decode(line));
+                }
+                i++;
             }
 
             System.out.println("-------------------SOLUTION-------------------------------------");
-            System.out.println();
+            System.out.println(solution);
             System.out.println("----------------------------------------------------------------");
-
 
             br.close();
         } catch (Exception e) {
@@ -89,6 +110,25 @@ What is the first number that does not have this property?
             System.out.println(e.getMessage());
             System.out.println("error mar");
         }
+    }
+
+    public static boolean isSumOfPrevious(List<Long> list, Long num) {
+        List<Long>  testSeq =  list.stream().filter(l -> (l<num)).sorted().collect(Collectors.toList());
+        System.out.println(testSeq);
+        System.out.println("-------------");
+
+        int lower = 0;
+        int higher = testSeq.size()-1;
+        while (higher > lower) {
+            if (testSeq.get(lower) + testSeq.get(higher) > num) {
+                higher--;
+            } else if (testSeq.get(lower) + testSeq.get(higher) == num) {
+                return true;
+            } else {
+                lower++;
+            }
+        }
+        return false;
     }
 }
 
