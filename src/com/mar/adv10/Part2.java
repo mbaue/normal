@@ -83,7 +83,7 @@ public class Part2 {
                 i++;
             }
             joltages[i++] = 0;
-            joltages[i++] = 170;
+            joltages[i] = 170;
 
             for (i = 0; i < joltages.length; i++) {
                 System.out.print(joltages[i] + ", ");
@@ -135,7 +135,7 @@ public class Part2 {
             }
             System.out.println();
 
-            double result = (double) Math.pow(2, counts[1]) * Math.pow(4, counts[2]) * Math.pow(7, counts[3]);
+            double result = Math.pow(2, counts[1]) * Math.pow(4, counts[2]) * Math.pow(7, counts[3]);
 
             String s = String.format("%.0f", result);
             System.out.println("-------------------SOLUTION-------------------------------------");
