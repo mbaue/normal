@@ -66,6 +66,10 @@ public class Part2 {
      * there must be an efficient way to count the arrangements.
      * <p>
      * What is the total number of distinct ways you can arrange the adapters to connect the charging outlet to your device?
+     *
+     * Your puzzle answer was 31581162962944.
+     *
+     * Both parts of this puzzle are complete! They provide two gold stars: **
      */
 
     public static void main(String[] args) {
